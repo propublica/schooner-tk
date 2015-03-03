@@ -15,7 +15,9 @@ small clouds, airplane contrails, and sensor malfunctions.
 
 Each input dataset needs to be the same size and in the same
 projection. **schooner-blend** will exit with a return code of -1 if
-a dataset is the incorrect size. You might want to preprocess the input images with **schooner-contrast** and **schooner-cloud** before running **schooner-blend**
+a dataset is the incorrect size. You might want to preprocess the
+input images with **schooner-contrast** and **schooner-cloud**
+before running **schooner-blend**.
 
 ## SEE ALSO
 

@@ -31,7 +31,12 @@ main(int argc, char *argv[]) {
     fflush(stdout);
     GDALRasterIO(GDALGetRasterBand(mask, 1), GF_Read, 0, y, width, 1, scanline, width, 1, GDT_UInt16, 0, 0);
     for(int x = 0; x < width; x++){
-      if((scanline[x] & (1 << 15)) || (scanline[x] & (1 << 13)) || (scanline[x] & (1 << 13)) || scanline[x] & 1){
+      if((scanline[x] & (1 << 15)) || // maybe cloud
+         (scanline[x] & (1 << 13)) || // maybe cirrus
+         (scanline[x] & (1 << 13)) || // maybe snow
+         (scanline[x] & (1 <<  7)) || // future cloud shadow
+          scanline[x] & 1             // fill pixel
+         ){
         tiny_scanline[x] = 0;
       } else {
         tiny_scanline[x] = 1;
