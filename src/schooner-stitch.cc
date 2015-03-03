@@ -5,7 +5,6 @@
 #include <opencv2/stitching/detail/blenders.hpp>
 #include "utils.h"
 
-
 class Bounds {
 public:
   Bounds() {}
