@@ -3,9 +3,8 @@
 #include <iomanip>
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching/detail/blenders.hpp>
+#include "utils.h"
 
-
-#define check(err, mess, args...) if(!(err)) { if(mess != NULL) fprintf(stderr, mess, ##args); goto error; }
 
 class Bounds {
 public:
