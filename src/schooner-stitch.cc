@@ -90,8 +90,6 @@ main(int argc, char **argv) {
   // build sizes and point vectors
   j = 1;
   for(GDALDataset *ds : datasets) {
-    // double geo[6];
-    // ds->GetGeoTransform(geo);
     Bounds obounds;
     obounds.FromDataset(ds);
     std::cout << ds->GetRasterXSize() << ", " << ds->GetRasterYSize() << std::endl;
