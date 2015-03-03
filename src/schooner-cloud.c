@@ -1,7 +1,8 @@
 #include <cpl_error.h>
 #include <cpl_conv.h>
 #include <gdal.h>
-#define check(err, mess, args...) if(!(err)) { fprintf(stderr, mess, ##args); goto error; }
+#include "utils.h"
+
 
 int
 main(int argc, char *argv[]) {
@@ -12,9 +13,8 @@ main(int argc, char *argv[]) {
   int width, height;
   check(argc == 3,
     "usage: quality-layer.tif mask.tif\n"
-    "run this after ok?\n"
+    "run this after to add the mask out the identified cloudy and snowy pixels\n"
     "   gdal_calc.py -A mask.tif -B ~/landsat.tif --calc=\"A*B\" --allBands=B --overwrite --type=Byte"
-    "note: this is in the landsat projection not 3857, so reproject it too"
   );
 
   GDALAllRegister();
@@ -31,7 +31,7 @@ main(int argc, char *argv[]) {
     fflush(stdout);
     GDALRasterIO(GDALGetRasterBand(mask, 1), GF_Read, 0, y, width, 1, scanline, width, 1, GDT_UInt16, 0, 0);
     for(int x = 0; x < width; x++){
-      if((scanline[x] & (1 << 15)) || (scanline[x] & (1 << 13)) || scanline[x] & 1){
+      if((scanline[x] & (1 << 15)) || (scanline[x] & (1 << 13)) || (scanline[x] & (1 << 13)) || scanline[x] & 1){
         tiny_scanline[x] = 0;
       } else {
         tiny_scanline[x] = 1;
@@ -41,13 +41,7 @@ main(int argc, char *argv[]) {
   }
   puts("");
 
-  double transform[6];
-  if(GDALGetGeoTransform(mask, transform) == CE_None)
-    GDALSetGeoTransform(out, transform);
-
-  if(GDALGetProjectionRef(mask) != NULL)
-    GDALSetProjection(out, GDALGetProjectionRef(mask));
-
+  assign_projection(mask, out);
 
   GDALClose(out);
   GDALClose(mask);

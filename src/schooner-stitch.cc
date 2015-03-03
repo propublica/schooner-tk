@@ -16,7 +16,6 @@ public:
     CPLErr err = ds->GetGeoTransform(geotransform);
     check(err == CE_None, NULL);
 
-    // cribbed from gdal_merge
     ul.first  = geotransform[0];
     ul.second = geotransform[3];
     lr.first  = ul.first + ds->GetRasterXSize() * geotransform[1];
@@ -139,7 +138,6 @@ main(int argc, char **argv) {
   outds->SetProjection(datasets.at(0)->GetProjectionRef());
 
   GDALClose(outds);
-
   for(GDALDataset *ds : datasets)
     GDALClose(ds);
   return 0;

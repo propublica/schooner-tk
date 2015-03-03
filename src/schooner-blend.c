@@ -6,8 +6,8 @@
 #include <cpl_error.h>
 #include <cpl_conv.h>
 #include <gdal.h>
+#include "utils.h"
 
-#define check(err, mess, args...) if(!(err)) { fprintf(stderr, mess, ##args); goto error; }
 const char *usage = "usage: schooner-blend <blend-datasets*> out.tif";
 
 void
@@ -106,14 +106,7 @@ main(int argc, char *argv[]){
   check(outds, "Couldn't create the output dataset %s.\n", out);
 
   process_datasets(outds, datasets, num);
-
-  double transform[6];
-  if(GDALGetGeoTransform(datasets[0], transform) == CE_None)
-    GDALSetGeoTransform(outds, transform);
-
-  if(GDALGetProjectionRef(datasets[0]) != NULL)
-    GDALSetProjection(outds, GDALGetProjectionRef(datasets[0]));
-
+  assign_projection(datasets[0], outds);
   close_datasets(datasets, num);
   return 0;
 error:
