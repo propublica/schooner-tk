@@ -1,11 +1,18 @@
-                    =-o-=
+                       =-o-=
 
-                             _~
-                          _~ )_)_~
-                          )_))_))_)
-                          _!__!__!_
-                          \______t/
-                        ~~~~~~~~~~~~~
-                         schooner-tk
+                                _~
+                             _~ )_)_~
+                             )_))_))_)
+                             _!__!__!_
+                             \______t/
+                           ~~~~~~~~~~~~~
+                            schooner-tk
 
+
+schooner-tk is a collection of utilities for averaging, color correcting,
+and removing artifacts from satellite images. It complements the GDAL
+utilities and the wonderful landsat util.
+
+Docs: https://propublica.github.io/schooner-tk
+Issues: https://github.com/propublica/schooner-tk/issues
 
