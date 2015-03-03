@@ -12,6 +12,7 @@ main(int argc, char** argv) {
     images.push_back(rgb);
   }
   std::vector<cv::Mat> dst;
+
   balance(images, dst);
 
   GDALAllRegister();

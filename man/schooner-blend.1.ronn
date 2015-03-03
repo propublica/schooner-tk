@@ -1,0 +1,23 @@
+schooner-blend(1) -- blend multiple raster datasets together
+============================================================
+
+## SYNOPSIS
+
+`schooner-blend` [<datasets>...] out.tif
+
+## DESCRIPTION
+
+The **schooner-blend** tool averages multiple <datasets> together
+on a per pixel basis in order to remove temporary artifacts such as
+small clouds, airplane contrails, and sensor malfunctions.
+
+## CAVEATS
+
+Each input dataset needs to be the same size and in the same
+projection. **schooner-blend** will exit with a return code of -1 if
+a dataset is the incorrect size. You might want to preprocess the input images with **schooner-contrast** and **schooner-cloud** before running **schooner-blend**
+
+## SEE ALSO
+
+schooner-contrast(1), schooner-cloud(1), schooner-multibalance(1),
+schooner-stitch(1)
