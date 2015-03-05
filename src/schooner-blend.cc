@@ -62,7 +62,7 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num){
         GDALRasterIO(band, GF_Read, 0, y, width, 1, scanline[d], width, 1, GDT_Byte, 0, 0);
       }
 
-      // populate the out scanline with the median value across datasets
+      // populate the out scanline with the average value across datasets
       for(int x = 0; x < width; x++){
         int size = 0;
         for(int d = 0; d < num; d++){
