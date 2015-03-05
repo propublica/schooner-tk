@@ -1,12 +1,16 @@
+# this makefile is a complete mess but I need help cleaning it up
+
 all: doc binaries
 
-doc: man/schooner-blend.1.html man/schooner-cloud.1.html man/schooner-contrast.1.html man/schooner-multibalance.1.html man/schooner-stitch.1.html
+doc: man/schooner-blend.1.html man/schooner-cloud.1.html man/schooner-contrast.1.html \
+	 man/schooner-multibalance.1.html man/schooner-stitch.1.html man/schooner-ndvi.1.html
 
 man/schooner-blend.1.html: man/schooner-blend.1.ronn
 man/schooner-cloud.1.html: man/schooner-cloud.1.ronn
 man/schooner-contrast.1.html: man/schooner-contrast.1.ronn
 man/schooner-multibalance.1.html: man/schooner-multibalance.1.ronn
 man/schooner-stitch.1.html: man/schooner-stitch.1.ronn
+man/schooner-ndvi.1.html: man/schooner-ndvi.1.ronn
 
 man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
@@ -22,6 +26,7 @@ src/schooner-cloud.o: src/schooner-cloud.cc src/utils.h
 src/schooner-contrast.o: src/schooner-contrast.cc src/utils.h
 src/schooner-multibalance.o: src/schooner-multibalance.cc src/utils.h
 src/schooner-stitch.o: src/schooner-stitch.cc src/utils.h
+src/schooner-ndvi.o: src/schooner-ndvi.cc src/utils.h
 
 bin/schooner-blend: src/schooner-blend.o bin
 	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS) $<
@@ -38,7 +43,11 @@ bin/schooner-multibalance: src/schooner-multibalance.o bin
 bin/schooner-stitch: src/schooner-stitch.o bin
 	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS) $<
 
-binaries: bin/schooner-blend bin/schooner-cloud bin/schooner-contrast bin/schooner-multibalance bin/schooner-stitch
+bin/schooner-ndvi: src/schooner-ndvi.o bin
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS) $<
+
+binaries: bin/schooner-blend bin/schooner-cloud bin/schooner-contrast \
+	      bin/schooner-multibalance bin/schooner-stitch bin/schooner-ndvi
 
 clean:
 	rm man/*.html man/*.1
