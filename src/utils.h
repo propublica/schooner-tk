@@ -1,6 +1,7 @@
 #ifndef SCHOONER_UTILS_H
 #define SCHOONER_UTILS_H
 
+#include <stdio.h>
 #include <gdal.h>
 #include <opencv2/opencv.hpp>
 
