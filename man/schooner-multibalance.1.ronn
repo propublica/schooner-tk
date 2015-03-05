@@ -3,29 +3,18 @@ schooner-multibalance(1) -- color correct a batch of images
 
 ## SYNOPSIS
 
-`schooner-blend` [<datasets>...] out.tif
+`schooner-multibalance` [<datasets>...]
 
 ## DESCRIPTION
 
-The **schooner-contrast** tool attempts to automatically color
-correct a landsat image. It uses two algorithms, the first is CLAHE
-(Contrast Limited Adaptive Histogram Equalization) which attempts
-to color correct an image while improving the local contrast of the
-image.
-
-The other is simple histogram stretching and clipping. The tool
-calculates a histogram by band, and stretches the raster values to
-the range 0 to 255. It also discards the top and bottom 0.05% of
-values.
+**schooner-multibalance** automatically corrects each band of many
+datasets so that each dataset has a similar color profile. This is
+useful as a preprocessing step to **schooner-blend**.
 
 ## CAVEATS
 
-Unlike **landsat-util**, **schooner-contrast** does not perform
-gamma correction. If you are working with landsat 8 images it is
-probably better to use **landsat-util**'s builtin color correction.
-
-If you are working with older landsat data, or data from sensors like
-MODIS, **schooner-contrast** works acceptably well.
+This tool operates in place and will change the source image, you
+probably want to create a backup of the source images.
 
 ## SEE ALSO
 

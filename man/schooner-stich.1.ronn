@@ -1,0 +1,33 @@
+schooner-stitch(1) -- seamlessly stitch multiple images together
+================================================================
+
+## SYNOPSIS
+
+`schooner-stitch` [<datasets>...] out.tif
+
+## DESCRIPTION
+
+**schooner-stitch** is the headlining act of the schooner toolkit.
+The tool
+
+## CAVEATS
+
+This tool relies on OpenCV 3.0 which is still in development, on OS X
+you can use homebrew to install it:
+
+	brew install opencv --devel --without-opencl
+
+on linux, you'll probably need to install OpenCV from source.
+
+## BUGS
+
+Due to a slew of bugs in OS X's video card drivers you want to
+install OpenCV without OpenCL. Otherwise when you attempt to stitch
+together many large images together your computer will crash, HARD.
+In addition, there the tool is RAM limited, so you _will_ run out
+memory if you are blending multiple large images.
+
+## SEE ALSO
+
+schooner-blend(1), schooner-cloud(1), schooner-contrast(1),
+schooner-multibalance(1)
