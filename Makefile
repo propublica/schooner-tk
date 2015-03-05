@@ -11,7 +11,7 @@ man/schooner-stitch.1.html: man/schooner-stitch.1.ronn
 man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
 
-CFLAGS ?= $(shell gdal-config --cflags) -g -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv)
+CXXFLAGS ?= $(shell gdal-config --cflags) -g -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv)
 LDLIBS ?= $(shell gdal-config --libs) $(shell pkg-config --libs opencv)
 
 bin:

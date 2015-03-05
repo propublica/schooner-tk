@@ -6,12 +6,14 @@
 
 int
 main(int argc, char** argv) {
+  std::vector<cv::Mat> dst;
   std::vector<cv::Mat> images;
+  check(argc > 2, "usage: schooner-multibalance <datasets>...");
+
   for(int i = 1; i < argc; i++){
     cv::Mat rgb = cv::imread(argv[i]);
     images.push_back(rgb);
   }
-  std::vector<cv::Mat> dst;
 
   balance(images, dst);
 
@@ -31,4 +33,8 @@ main(int argc, char** argv) {
     GDALClose(gsrc);
     GDALClose(gdst);
   }
+
+  return 0;
+error:
+  return -1;
 }
