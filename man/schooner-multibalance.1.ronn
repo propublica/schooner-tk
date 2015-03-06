@@ -11,11 +11,6 @@ schooner-multibalance(1) -- color correct a batch of images
 datasets so that each dataset has a similar color profile. This is
 useful as a preprocessing step to **schooner-blend**.
 
-## CAVEATS
-
-This tool operates in place and will change the source image, you
-probably want to create a backup of the source images.
-
 ## SEE ALSO
 
 schooner-blend(1), schooner-cloud(1), schooner-contrast(1),
