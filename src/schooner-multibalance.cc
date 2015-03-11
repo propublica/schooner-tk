@@ -8,7 +8,7 @@ int
 main(int argc, char** argv) {
   std::vector<cv::Mat> dst;
   std::vector<cv::Mat> images;
-  check(argc > 2, "usage: schooner-multibalance <datasets>...");
+  check(argc > 1, "usage: schooner-multibalance <datasets>...");
 
   for(int i = 1; i < argc; i++){
     cv::Mat rgb = cv::imread(argv[i]);

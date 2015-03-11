@@ -27,6 +27,9 @@ probably better to use **landsat-util**'s builtin color correction.
 If you are working with older landsat data, or data from sensors like
 MODIS, **schooner-contrast** works acceptably well.
 
+Due to the way OpenCV works, this utility currently converts everything
+to 8 bit images.
+
 ## SEE ALSO
 
 schooner-blend(1), schooner-cloud(1), schooner-multibalance(1),

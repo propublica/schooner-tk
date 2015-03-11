@@ -1,63 +1,59 @@
 #ifndef SCHOONER_UTILS_H
 #define SCHOONER_UTILS_H
-
+#include <assert.h>
 #include <stdio.h>
 #include <gdal.h>
 #include <opencv2/opencv.hpp>
 
 #define check(err, mess, args...) if(!(err)) { fprintf(stderr, mess, ##args); goto error; }
 
+// stretches histograms across multiple images
 void
 balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
-  std::vector<std::vector<uint64_t> > hists(3);
-  for(int i = 0; i < 3; i++)
-    hists[i] = std::vector<uint64_t>(256, 0);
+  std::vector<std::pair<double, double> > minmax;
 
-  std::vector<uint64_t> totals(3, 0);
-  // calculate histogram across all files
   for(cv::Mat image : images){
-    std::vector<cv::Mat> rgb;
-    cv::split(image, rgb);
+    std::vector<cv::Mat> chans;
+    cv::split(image, chans);
+    int i = 0;
+    for(cv::Mat chan : chans) {
+      cv::Mat sorted(chan.reshape(0,1).rows, chan.reshape(0,1).cols, chan.type());
+      chan.reshape(0,1).copyTo(sorted);
+      std::cout << sorted.size().width << "," << sorted.size().height << std::endl;
+      cv::sort(sorted, sorted, cv::SORT_EVERY_ROW + cv::SORT_ASCENDING);
+      double min, max;
+      cv::minMaxLoc(sorted, &min, &max);
 
-    for(int i = 0; i < rgb.size(); i++) {
-      for(auto it = rgb[i].begin<uint8_t>(); it < rgb[i].end<uint8_t>(); it++){
-        hists[i][*it]++;
-        totals[i]++;
-      }
+      if(minmax.size() < i + 1)
+        minmax.push_back(std::make_pair(DBL_MAX, 0));
+
+      int black_index = 0;
+      while(sorted.at<uint16_t>(0, black_index) == 0 && black_index < sorted.cols) black_index++;
+
+      std::pair<double, double> &d = minmax.at(i);
+      d.first  = fmin(d.first,  sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 0.1 / 100 + black_index));
+      d.second = fmax(d.second, sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 99.9 / 100 + black_index));
+      i++;
     }
   }
 
-  std::vector<std::pair<uint8_t, uint8_t> > minmax(3, std::make_pair(0,0));
-  for(int i = 0; i < 3; i++){
-    std::vector<uint64_t> hist = hists[i];
-    uint64_t total = totals[i];
-    uint8_t min = 0; uint64_t n = 0;
-    while(hist[min] + n < total * 0.005)
-      n += hist[min++];
-
-    uint8_t max = 255; uint64_t x = 0;
-    while(hist[max] + x < total * 0.005)
-      x += hist[max--];
-
-    minmax[i] = std::pair<uint8_t, uint8_t>(min, max);
-  }
-
   for(cv::Mat image : images){
-    std::vector<cv::Mat> rgb;
-    cv::split(image, rgb);
+    std::vector<cv::Mat> chans;
+    cv::split(image, chans);
 
-    for(int i = 0; i < rgb.size(); i++) {
-      std::pair<uint8_t, uint8_t> mm = minmax[i];
-      float min = (float)mm.first;
-      float max = (float)mm.second;
-      rgb[i] = (rgb[i] - min) / (max - min) * 255 + min;
+    for(int i = 0; i < chans.size(); i++) {
+      std::pair<double, double> &d = minmax.at(i);
+      std::cout << d.first << ", " << d.second << std::endl;
+      chans[i] = (chans[i] - d.first) / (d.second - d.first) * 65535;
     }
 
     cv::Mat out;
-    cv::merge(rgb, out);
+    cv::merge(chans, out);
     dst.push_back(out);
   }
 }
+
+
 
 
 void

@@ -10,21 +10,24 @@
 #include "utils.h"
 
 
+
 int
 main(int argc, char** argv) {
   if(argc != 3) {
     std::cout << "usage: schooner-clahe src dst" << std::endl;
     exit(1);
   }
-  cv::Mat rgb = cv::imread(argv[1]);
+  cv::Mat rgb = cv::imread(argv[1], cv::IMREAD_ANYDEPTH | cv::IMREAD_ANYCOLOR);
   std::vector<cv::Mat> images;
   images.push_back(rgb);
   std::vector<cv::Mat> out;
 
   balance(images, out);
   cv::Mat rgbc = out.at(0);
-
+  rgbc /= 256.0;
+  rgbc.convertTo(rgbc, CV_8U);
   cv::Mat lab;
+
   cv::cvtColor(rgbc, lab, cv::COLOR_RGB2Lab);
 
   std::vector<cv::Mat> lab_planes(3);
@@ -37,8 +40,8 @@ main(int argc, char** argv) {
 
   dst.copyTo(lab_planes[0]);
   cv::merge(lab_planes, lab);
-
   cv::Mat clahe_img;
+
   cv::cvtColor(lab, clahe_img, cv::COLOR_Lab2RGB);
   cv::imwrite(argv[2], clahe_img);
 
