@@ -14,15 +14,27 @@
 int
 main(int argc, char** argv) {
   if(argc != 3) {
-    std::cout << "usage: schooner-clahe src dst" << std::endl;
+    std::cout << "usage: schooner-contrast src dst" << std::endl;
     exit(1);
   }
+
   cv::Mat rgb = cv::imread(argv[1], cv::IMREAD_ANYDEPTH | cv::IMREAD_ANYCOLOR);
+  if(!(rgb.type() == CV_8U || rgb.type() == CV_16U)){
+    std::cout << "schooner-contrast requires 8bit or 16bit images." << std::endl;
+    exit(1);
+  }
+
+  if(rgb.type() == CV_8U) {
+    rgb.convertTo(rgb, CV_16U);
+    rgb *= 256.0;
+  }
+
   std::vector<cv::Mat> images;
   images.push_back(rgb);
   std::vector<cv::Mat> out;
 
   balance(images, out);
+
   cv::Mat rgbc = out.at(0);
   rgbc /= 256.0;
   rgbc.convertTo(rgbc, CV_8U);
