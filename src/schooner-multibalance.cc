@@ -11,7 +11,7 @@ main(int argc, char** argv) {
   check(argc > 1, "usage: schooner-multibalance <datasets>...");
 
   for(int i = 1; i < argc; i++){
-    cv::Mat rgb = cv::imread(argv[i]);
+    cv::Mat rgb = cv::imread(argv[i], cv::IMREAD_ANYDEPTH | cv::IMREAD_ANYCOLOR);
     images.push_back(rgb);
   }
 
