@@ -31,8 +31,8 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
       while(sorted.at<uint16_t>(0, black_index) == 0 && black_index < sorted.cols) black_index++;
 
       std::pair<double, double> &d = minmax.at(i);
-      d.first  = fmin(d.first,  sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 0.1 / 100 + black_index));
-      d.second = fmax(d.second, sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 99.9 / 100 + black_index));
+      d.first  = fmin(d.first,  sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 0.01 / 100 + black_index));
+      d.second = fmax(d.second, sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 99.7 / 100 + black_index));
       i++;
     }
   }
