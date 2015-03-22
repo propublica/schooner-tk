@@ -1,0 +1,35 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "SCHOONER\-STITCH" "1" "March 2015" "propublica" "schooner-tk"
+.
+.SH "NAME"
+\fBschooner\-stitch\fR \- seamlessly stitch multiple images together
+.
+.SH "SYNOPSIS"
+\fBschooner\-stitch\fR [\fIdatasets\fR\.\.\.] out\.tif
+.
+.SH "DESCRIPTION"
+\fBschooner\-stitch\fR is the headlining act of the schooner toolkit\. The tool
+.
+.SH "CAVEATS"
+This tool relies on OpenCV 3\.0 which is still in development, on OS X you can use homebrew to install it:
+.
+.IP "" 4
+.
+.nf
+
+brew install opencv \-\-devel \-\-without\-opencl
+.
+.fi
+.
+.IP "" 0
+.
+.P
+on linux, you\'ll probably need to install OpenCV from source\.
+.
+.SH "BUGS"
+Due to a slew of bugs in OS X\'s video card drivers you want to install OpenCV without OpenCL\. Otherwise when you attempt to stitch together many large images together your computer will crash, HARD\. In addition, there the tool is RAM limited, so you \fIwill\fR run out memory if you are blending multiple large images\.
+.
+.SH "SEE ALSO"
+schooner\-blend(1), schooner\-cloud(1), schooner\-contrast(1), schooner\-multibalance(1)
