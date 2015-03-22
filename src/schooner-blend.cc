@@ -1,11 +1,10 @@
+#include <cpl_error.h>
+#include <cpl_conv.h>
+#include <gdal.h>
 #include <memory.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include <cpl_error.h>
-#include <cpl_conv.h>
-#include <gdal.h>
 #include "utils.h"
 
 const char *usage = "usage: schooner-blend <blend-datasets*> out.tif";
@@ -20,7 +19,7 @@ close_datasets(GDALDatasetH *datasets, int num) {
 }
 
 bool
-open_datasets(GDALDatasetH *datasets, int num, char **files){
+open_datasets(GDALDatasetH *datasets, int num, char **files) {
   for(int i = 0; i < num; i++) {
     int (*checks[])(GDALDatasetH) = {GDALGetRasterCount, GDALGetRasterXSize, GDALGetRasterYSize};
     int j;
@@ -42,7 +41,7 @@ sort_int(const void *a, const void *b) {
 }
 
 void
-process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num){
+process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
   uint8_t pixels[num];
   int bands  = GDALGetRasterCount(datasets[0]);
   int width  = GDALGetRasterXSize(datasets[0]);
@@ -90,7 +89,7 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num){
 }
 
 int
-main(int argc, char *argv[]){
+main(int argc, char *argv[]) {
   if(argc < 3) { printf("usage: schooner-blend <blend-datasets*> out.tif"); return -1; };
   GDALAllRegister();
   int num = argc - 2;

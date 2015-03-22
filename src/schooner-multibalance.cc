@@ -19,7 +19,7 @@ main(int argc, char** argv) {
 
   GDALAllRegister();
 
-  for(int i = 1; i < argc; i++){
+  for(int i = 1; i < argc; i++) {
     std::string out(argv[i]);
     out.append(".balanced.tif");
     std::cout << "writing " << out << std::endl;

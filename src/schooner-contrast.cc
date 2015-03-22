@@ -1,15 +1,13 @@
-#include <opencv2/opencv.hpp>
-#include <vector>
 #include <iostream>
 #include <gdal.h>
+#include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/core/core_c.h>
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/types_c.h>
+#include <vector>
 #include "utils.h"
-
-
 
 int
 main(int argc, char** argv) {

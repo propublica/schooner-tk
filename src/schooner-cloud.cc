@@ -3,7 +3,6 @@
 #include <gdal.h>
 #include "utils.h"
 
-
 int
 main(int argc, char *argv[]) {
   GDALDatasetH mask = NULL;

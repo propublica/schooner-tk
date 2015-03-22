@@ -1,5 +1,6 @@
 #ifndef SCHOONER_UTILS_H
 #define SCHOONER_UTILS_H
+
 #include <assert.h>
 #include <stdio.h>
 #include <gdal.h>
@@ -9,7 +10,7 @@
 
 // stretches histograms across multiple images
 void
-balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
+balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
   std::vector<std::pair<double, double> > minmax;
 
   for(cv::Mat image : images){
@@ -21,8 +22,6 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
       chan.reshape(0,1).copyTo(sorted);
       std::cout << sorted.size().width << "," << sorted.size().height << std::endl;
       cv::sort(sorted, sorted, cv::SORT_EVERY_ROW + cv::SORT_ASCENDING);
-      double min, max;
-      cv::minMaxLoc(sorted, &min, &max);
 
       if(minmax.size() < i + 1)
         minmax.push_back(std::make_pair(DBL_MAX, 0));
@@ -37,7 +36,7 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
     }
   }
 
-  for(cv::Mat image : images){
+  for(cv::Mat image : images) {
     std::vector<cv::Mat> chans;
     cv::split(image, chans);
 
@@ -53,11 +52,8 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst){
   }
 }
 
-
-
-
 void
-assign_projection(GDALDatasetH src, GDALDatasetH dst){
+assign_projection(GDALDatasetH src, GDALDatasetH dst) {
   double transform[6];
   if(GDALGetGeoTransform(src, transform) == CE_None)
     GDALSetGeoTransform(dst, transform);

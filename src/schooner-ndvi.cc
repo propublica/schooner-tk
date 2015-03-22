@@ -9,7 +9,7 @@ main(int argc, char **argv){
   ir  = cv::imread(argv[1]);
   vis = cv::imread(argv[2]);
 
-  res = (ir - vis) / (ir + vis);
+  res = (ir - vis) / (ir + vis + 0.00000001);
 
   cv::imwrite(argv[3], res);
   src = GDALOpen(argv[1], GA_ReadOnly);
