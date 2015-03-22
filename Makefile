@@ -1,13 +1,10 @@
-# this makefile is a complete mess but I need help cleaning it up
-
 CC = clang++
 CXX = clang++
-RONN = $(shell find man -name "*.ronn")
+RONN = $(wildcard man/*.ronn)
 HTML = $(RONN:.ronn=.html)
 
-SRCS = $(shell find src -name "*.cc")
-OBJS = $(SRCS:.cc=.o)
-BINS = $(basename $(OBJS))
+SRCS = $(wildcard src/*.cc)
+BINS = $(basename $(SRCS))
 
 all: doc binaries $(HTML)
 doc: $(HTML)
@@ -16,20 +13,11 @@ binaries: $(BINS)
 man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
 
-CXXFLAGS ?= $(shell gdal-config --cflags) -g -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv) -I./src/
-LDLIBS ?= $(shell gdal-config --libs) $(shell pkg-config --libs opencv)
-
-src/schooner-blend.o: src/schooner-blend.cc src/utils.h
-src/schooner-cloud.o: src/schooner-cloud.cc src/utils.h
-src/schooner-contrast.o: src/schooner-contrast.cc src/utils.h
-src/schooner-multibalance.o: src/schooner-multibalance.cc src/utils.h
-src/schooner-stitch.o: src/schooner-stitch.cc src/utils.h
-src/schooner-ndvi.o: src/schooner-ndvi.cc src/utils.h
+CXXFLAGS = $(shell gdal-config --cflags) -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv) -I./src/ -MMD -MP
+LDLIBS = $(shell gdal-config --libs) $(shell pkg-config --libs opencv)
 
 clean: all
-	rm man/*.html man/*.1
-	rm $(OBJS)
-	rm $(BINS)
+	rm man/*.html man/*.1 $(BINS)
 
 install: all
 	install $(BINS) /usr/local/bin

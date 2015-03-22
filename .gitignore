@@ -1,4 +1,7 @@
-*.o
-*.a
 .DS_Store
-bin
+src/schooner-blend
+src/schooner-cloud
+src/schooner-contrast
+src/schooner-multibalance
+src/schooner-ndvi
+src/schooner-stitch
