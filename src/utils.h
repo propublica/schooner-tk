@@ -20,7 +20,6 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
     for(cv::Mat chan : chans) {
       cv::Mat sorted(chan.reshape(0,1).rows, chan.reshape(0,1).cols, chan.type());
       chan.reshape(0,1).copyTo(sorted);
-      std::cout << sorted.size().width << "," << sorted.size().height << std::endl;
       cv::sort(sorted, sorted, cv::SORT_EVERY_ROW + cv::SORT_ASCENDING);
 
       if(minmax.size() < i + 1)
@@ -42,7 +41,6 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
 
     for(int i = 0; i < chans.size(); i++) {
       std::pair<double, double> &d = minmax.at(i);
-      std::cout << d.first << ", " << d.second << std::endl;
       chans[i] = (chans[i] - d.first) / (d.second - d.first) * 65535;
     }
 

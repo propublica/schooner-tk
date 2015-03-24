@@ -9,6 +9,7 @@
 #include <vector>
 #include "utils.h"
 
+
 int
 main(int argc, char** argv) {
   if(argc != 3) {
@@ -17,12 +18,17 @@ main(int argc, char** argv) {
   }
 
   cv::Mat rgb = cv::imread(argv[1], cv::IMREAD_ANYDEPTH | cv::IMREAD_ANYCOLOR);
-  if(!(rgb.type() == CV_8U || rgb.type() == CV_16U)){
+  if(!(rgb.type() == CV_8U ||
+       rgb.type() == CV_8S ||
+       rgb.type() == CV_8UC3 ||
+       rgb.type() == CV_16U)){
     std::cout << "schooner-contrast requires 8bit or 16bit images." << std::endl;
     exit(1);
   }
 
-  if(rgb.type() == CV_8U) {
+  if(rgb.type() == CV_8U ||
+     rgb.type() == CV_8S ||
+     rgb.type() == CV_8UC3) {
     rgb.convertTo(rgb, CV_16U);
     rgb *= 256.0;
   }

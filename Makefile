@@ -13,10 +13,10 @@ binaries: $(BINS)
 man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
 
-CXXFLAGS = $(shell gdal-config --cflags) -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv) -I./src/
-LDLIBS = $(shell gdal-config --libs) $(shell pkg-config --libs opencv)
+CXXFLAGS = $(shell gdal-config --cflags) -g -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv) -I./src/
+LDLIBS = $(shell gdal-config --libs) $(shell pkg-config --libs opencv) -std=c++11 -stdlib=libc++
 
-clean: all
+clean:
 	rm man/*.html man/*.1 $(BINS)
 
 install: all
