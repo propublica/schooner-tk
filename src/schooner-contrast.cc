@@ -20,15 +20,38 @@ main(int argc, char** argv) {
   cv::Mat rgb = cv::imread(argv[1], cv::IMREAD_ANYDEPTH | cv::IMREAD_ANYCOLOR);
   if(!(rgb.type() == CV_8U ||
        rgb.type() == CV_8S ||
+       rgb.type() == CV_8SC1 ||
+       rgb.type() == CV_8SC2 ||
+       rgb.type() == CV_8SC3 ||
+       rgb.type() == CV_8SC4 ||
+       rgb.type() == CV_8UC1 ||
+       rgb.type() == CV_8UC2 ||
        rgb.type() == CV_8UC3 ||
-       rgb.type() == CV_16U)){
+       rgb.type() == CV_8UC4 ||
+       rgb.type() == CV_16U  ||
+       rgb.type() == CV_16S  ||
+       rgb.type() == CV_16SC1 ||
+       rgb.type() == CV_16SC2 ||
+       rgb.type() == CV_16SC3 ||
+       rgb.type() == CV_16SC4 ||
+       rgb.type() == CV_16UC1 ||
+       rgb.type() == CV_16UC2 ||
+       rgb.type() == CV_16UC3 ||
+       rgb.type() == CV_16UC4)){
     std::cout << "schooner-contrast requires 8bit or 16bit images." << std::endl;
     exit(1);
   }
 
   if(rgb.type() == CV_8U ||
      rgb.type() == CV_8S ||
-     rgb.type() == CV_8UC3) {
+     rgb.type() == CV_8SC1 ||
+     rgb.type() == CV_8SC2 ||
+     rgb.type() == CV_8SC3 ||
+     rgb.type() == CV_8SC4 ||
+     rgb.type() == CV_8UC1 ||
+     rgb.type() == CV_8UC2 ||
+     rgb.type() == CV_8UC3 ||
+     rgb.type() == CV_8UC4) {
     rgb.convertTo(rgb, CV_16U);
     rgb *= 256.0;
   }
