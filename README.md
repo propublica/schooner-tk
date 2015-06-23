@@ -21,7 +21,7 @@ Once OpenCV is installed, **clone the repository**.
 
 Use **make** to compile and install schooner.
 
-    make
+    make && make install
 
 Once installed, each command can be called from your terminal with:
 
