@@ -67,5 +67,5 @@ step to schooner-blend.
 Learn more
 ----------
 
-For more detail, please see the [official documentation](https://propublica.github.io/schooner-tk://propublica.github.io/schooner-tk/). 
+For more detail, please see the [official documentation](https://propublica.github.io/schooner-tk/). 
 For an example of a schooner-powered workflow, see [jqtr.de/schooner/](http://jqtr.de/schooner/).
