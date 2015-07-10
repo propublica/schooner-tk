@@ -41,9 +41,23 @@ sort_int(const void *a, const void *b) {
   return (*(uint8_t *) a > *(uint8_t *)b) ? 1 : -1;
 }
 
+int
+median(std::vector<int> els) {
+  if(els.size() == 0) return 0;
+  if(els.size() == 1) return els.at(0);
+  std::sort(els.begin(), els.end());
+  int median;
+  int size = els.size();
+  if(size % 2 == 0) {
+    median = els.at(size / 2);
+  } else {
+    median = (els.at(size / 2) + els.at((size + 2) / 2)) / 2;
+  }
+  return median;
+}
+
 void
 process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
-  uint16_t pixels[num];
   int bands  = GDALGetRasterCount(datasets[0]);
   int width  = GDALGetRasterXSize(datasets[0]);
   int height = GDALGetRasterYSize(datasets[0]);
@@ -64,6 +78,8 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
 
       // populate the out scanline with the average value across datasets
       for(int x = 0; x < width; x++){
+        uint16_t pixels[num];
+        for(int d = 0; d < num; d++) pixels[d] = 0;
         int size = 0;
         for(int d = 0; d < num; d++){
           if(scanline[d][x] > 0) {
@@ -73,10 +89,28 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
         }
 
         // average the pixels
-        int tot = 0;
+        std::vector<int> sorted;
         for(int i = 0; i < size; i++)
-          tot += pixels[i];
-        outscan[x] = size != 0 ? tot / size : 0;
+          sorted.push_back(pixels[i]);
+        int med = median(sorted);
+
+        std::vector<int> deviations;
+        for(int i = 0; i < size; i++)
+          deviations.push_back(std::abs(sorted.at(i) - med));
+        int mad = median(deviations);
+
+        // Boris Iglewicz and David Hoaglin (1993), "Volume 16: How to Detect and Handle Outliers"
+        int tot = 0;
+        int real_size = size;
+        for(int i = 0; i < size; i++){
+          float m = mad != 0 ? std::abs(0.6745 * ((float)pixels[i] - (float)med) / (float)mad) : 0;
+          if(m < 3.5) {
+            tot += pixels[i];
+          } else {
+            real_size--;
+          }
+        }
+        outscan[x] = real_size != 0 ? tot / real_size : pixels[0];
       }
       GDALRasterBandH band = GDALGetRasterBand(out, b);
       GDALRasterIO(band, GF_Write, 0, y, width, 1, outscan, width, 1, GDT_UInt16, 0, 0);
