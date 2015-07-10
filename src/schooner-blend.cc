@@ -1,5 +1,6 @@
 #include <cpl_error.h>
 #include <cpl_conv.h>
+#include <cpl_string.h>
 #include <gdal.h>
 #include <memory.h>
 #include <stdbool.h>
@@ -42,14 +43,14 @@ sort_int(const void *a, const void *b) {
 
 void
 process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
-  uint8_t pixels[num];
+  uint16_t pixels[num];
   int bands  = GDALGetRasterCount(datasets[0]);
   int width  = GDALGetRasterXSize(datasets[0]);
   int height = GDALGetRasterYSize(datasets[0]);
-  uint8_t *outscan = (uint8_t *)calloc(width, sizeof(uint8_t));
-  uint8_t *scanline[num];
+  uint16_t *outscan = (uint16_t *)calloc(width, sizeof(uint16_t));
+  uint16_t *scanline[num];
   for(int i = 0; i < num; i++)
-    scanline[i] = (uint8_t *)calloc(width, sizeof(uint8_t));
+    scanline[i] = (uint16_t *)calloc(width, sizeof(uint16_t));
 
   // for each band
   for(int b = 1; b <= bands; b++){
@@ -58,7 +59,7 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
       // grab the scanlines
       for(int d = 0; d < num; d++) {
         GDALRasterBandH band = GDALGetRasterBand(datasets[d], b);
-        GDALRasterIO(band, GF_Read, 0, y, width, 1, scanline[d], width, 1, GDT_Byte, 0, 0);
+        GDALRasterIO(band, GF_Read, 0, y, width, 1, scanline[d], width, 1, GDT_UInt16, 0, 0);
       }
 
       // populate the out scanline with the average value across datasets
@@ -78,7 +79,7 @@ process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
         outscan[x] = size != 0 ? tot / size : 0;
       }
       GDALRasterBandH band = GDALGetRasterBand(out, b);
-      GDALRasterIO(band, GF_Write, 0, y, width, 1, outscan, width, 1, GDT_Byte, 0, 0);
+      GDALRasterIO(band, GF_Write, 0, y, width, 1, outscan, width, 1, GDT_UInt16, 0, 0);
       printf("Band %i: %.2f%%\r", b, (float)y/(float)height * 100);
       fflush(stdout);
     }
@@ -94,6 +95,7 @@ main(int argc, char *argv[]) {
   GDALAllRegister();
   int num = argc - 2;
   char *out;
+  char **options = NULL;
   GDALDatasetH datasets[num], outds = NULL;
   memset(datasets, 0, sizeof(datasets));
 
@@ -101,7 +103,12 @@ main(int argc, char *argv[]) {
   check(err, "Could not open all datasets.\n");
 
   out = argv[argc - 1];
-  outds = GDALCreate(GDALGetDriverByName("GTiff"), out, GDALGetRasterXSize(datasets[0]), GDALGetRasterYSize(datasets[0]), GDALGetRasterCount(datasets[0]), GDT_Byte, NULL);
+
+  options = CSLSetNameValue(options, "PHOTOMETRIC", "RGB");
+
+  outds = GDALCreate(GDALGetDriverByName("GTiff"), out, GDALGetRasterXSize(datasets[0]),
+                        GDALGetRasterYSize(datasets[0]), GDALGetRasterCount(datasets[0]),
+                        GDT_UInt16, options);
   check(outds, "Couldn't create the output dataset %s.\n", out);
 
   process_datasets(outds, datasets, num);
