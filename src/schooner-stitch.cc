@@ -115,7 +115,7 @@ main(int argc, char **argv) {
 
   // from https://github.com/Itseez/opencv/blob/0726c4d4ea80e73c96ccee7bd3ef5f71f46ac82b/samples/cpp/stitching_detailed.cpp#L799
   dst_sz = cv::detail::resultRoi(corners, sizes).size();
-  blend_width = sqrt(static_cast<float>(dst_sz.area())) * 5 / 100.f;
+  blend_width = sqrt(static_cast<float>(dst_sz.area())) * 2.5 / 100.f;
   std::cout << "Blending sharpness set to " << 1.f / blend_width << std::endl;
   dynamic_cast<cv::detail::FeatherBlender *>(blender.get())->setSharpness(1.f / blend_width);
 
