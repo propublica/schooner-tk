@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching/detail/blenders.hpp>
+#include <opencv2/stitching/detail/util.hpp>
 #include "utils.h"
 
 class Bounds {
@@ -51,6 +52,8 @@ main(int argc, char **argv) {
   std::vector<cv::Point> corners;
   cv::Mat result, result_mask;
   GDALDataset *outds = NULL;
+  cv::Size dst_sz;
+  float blend_width;
 
   // init gdal
   GDALAllRegister();
@@ -109,6 +112,12 @@ main(int argc, char **argv) {
 
     j++;
   }
+
+  // from https://github.com/Itseez/opencv/blob/0726c4d4ea80e73c96ccee7bd3ef5f71f46ac82b/samples/cpp/stitching_detailed.cpp#L799
+  dst_sz = cv::detail::resultRoi(corners, sizes).size();
+  blend_width = sqrt(static_cast<float>(dst_sz.area())) * 5 / 100.f;
+  std::cout << "Blending sharpness set to " << 1.f / blend_width << std::endl;
+  dynamic_cast<cv::detail::FeatherBlender *>(blender.get())->setSharpness(1.f / blend_width);
 
   blender->prepare(corners, sizes);
 
