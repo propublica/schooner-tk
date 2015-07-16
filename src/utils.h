@@ -30,7 +30,7 @@ balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
 
       std::pair<double, double> &d = minmax.at(i);
       d.first  = fmin(d.first,  sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 0.01 / 100 + black_index));
-      d.second = fmax(d.second, sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 99.9 / 100 + black_index));
+      d.second = fmax(d.second, sorted.at<uint16_t>(0,(int)(sorted.cols - black_index) * 99.7 / 100 + black_index));
       i++;
     }
   }
