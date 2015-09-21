@@ -7,7 +7,7 @@
 #include "utils.h"
 
 class Bounds {
-public:
+ public:
   Bounds() {}
 
   int FromDataset(GDALDataset *ds) {
@@ -15,9 +15,9 @@ public:
     CPLErr err = ds->GetGeoTransform(geotransform);
     check(err == CE_None, NULL);
 
-    ul.first  = geotransform[0];
+    ul.first = geotransform[0];
     ul.second = geotransform[3];
-    lr.first  = ul.first + ds->GetRasterXSize() * geotransform[1];
+    lr.first = ul.first + ds->GetRasterXSize() * geotransform[1];
     lr.second = ul.second + ds->GetRasterYSize() * geotransform[5];
 
     return false;
@@ -26,9 +26,9 @@ public:
   }
 
   void extend(Bounds obounds) {
-    ul.first  = std::min(obounds.ul.first, ul.first);
+    ul.first = std::min(obounds.ul.first, ul.first);
     ul.second = std::max(obounds.ul.second, ul.second);
-    lr.first  = std::max(obounds.lr.first, lr.first);
+    lr.first = std::max(obounds.lr.first, lr.first);
     lr.second = std::min(obounds.lr.second, lr.second);
   }
 
@@ -36,9 +36,11 @@ public:
   std::pair<double, double> lr;
 };
 
-int
-main(int argc, char **argv) {
-  if(argc < 3) { std::cout << "usage: stitch <stitch-datasets*> out.tif" << std::endl; return -1; };
+int main(int argc, char **argv) {
+  if (argc < 3) {
+    std::cout << "usage: stitch <stitch-datasets*> out.tif" << std::endl;
+    return -1;
+  };
 
   // declarations
   std::vector<GDALDataset *> datasets;
@@ -47,7 +49,8 @@ main(int argc, char **argv) {
   int j = 1;
   double geotransform[6];
   int xsize, ysize;
-  cv::Ptr<cv::detail::Blender> blender = cv::detail::Blender::createDefault(cv::detail::Blender::FEATHER, false);
+  cv::Ptr<cv::detail::Blender> blender =
+      cv::detail::Blender::createDefault(cv::detail::Blender::FEATHER, false);
   std::vector<cv::Size> sizes;
   std::vector<cv::Point> corners;
   cv::Mat result, result_mask;
@@ -59,8 +62,8 @@ main(int argc, char **argv) {
   GDALAllRegister();
 
   // open datasets
-  for(int i = 1; i < argc - 1; i++) {
-    GDALDataset *dataset = (GDALDataset *) GDALOpen(argv[i], GA_ReadOnly);
+  for (int i = 1; i < argc - 1; i++) {
+    GDALDataset *dataset = (GDALDataset *)GDALOpen(argv[i], GA_ReadOnly);
     check(dataset != NULL, "Could not open %s\n", argv[i]);
     datasets.push_back(dataset);
   }
@@ -70,7 +73,7 @@ main(int argc, char **argv) {
 
   // fill out bookkeeping structures
   j = 1;
-  for(GDALDataset *ds : datasets) {
+  for (GDALDataset *ds : datasets) {
     Bounds obounds;
     obounds.FromDataset(ds);
     check(err == false, "%s doesn't have geo information", argv[j]);
@@ -82,8 +85,10 @@ main(int argc, char **argv) {
   datasets[0]->GetGeoTransform(geotransform);
   xsize = (bounds.lr.first - bounds.ul.first) / geotransform[1] + 0.5;
   ysize = (bounds.lr.second - bounds.ul.second) / geotransform[5] + 0.5;
-  printf("Creating dataset %s with size %d x %d \n", argv[argc - 1], xsize, ysize);
-  printf("and bounds UL: %f %f LR: %f %f\n", bounds.ul.first, bounds.ul.second, bounds.lr.first, bounds.lr.second);
+  printf("Creating dataset %s with size %d x %d \n", argv[argc - 1], xsize,
+         ysize);
+  printf("and bounds UL: %f %f LR: %f %f\n", bounds.ul.first, bounds.ul.second,
+         bounds.lr.first, bounds.lr.second);
 
   geotransform[0] = bounds.ul.first;
   geotransform[2] = 0;
@@ -92,36 +97,39 @@ main(int argc, char **argv) {
 
   // build sizes and point vectors
   j = 1;
-  for(GDALDataset *ds : datasets) {
+  for (GDALDataset *ds : datasets) {
     Bounds obounds;
     obounds.FromDataset(ds);
-    std::cout << ds->GetRasterXSize() << ", " << ds->GetRasterYSize() << std::endl;
+    std::cout << ds->GetRasterXSize() << ", " << ds->GetRasterYSize()
+              << std::endl;
     cv::Point pt(
-      round((obounds.ul.first - geotransform[0]) / geotransform[1]),
-      round((obounds.ul.second - geotransform[3]) / geotransform[5])
-    );
+        round((obounds.ul.first - geotransform[0]) / geotransform[1]),
+        round((obounds.ul.second - geotransform[3]) / geotransform[5]));
     corners.push_back(pt);
-    std::cout << "placing " << argv[j] << " at " << pt.x << ", " << pt.y << std::endl;
+    std::cout << "placing " << argv[j] << " at " << pt.x << ", " << pt.y
+              << std::endl;
 
     cv::Size s(
-      ((obounds.lr.first - geotransform[0]) / geotransform[1] + 0.5) - pt.x,
-      ((obounds.lr.second - geotransform[3]) / geotransform[5] + 0.5) - pt.y
-    );
+        ((obounds.lr.first - geotransform[0]) / geotransform[1] + 0.5) - pt.x,
+        ((obounds.lr.second - geotransform[3]) / geotransform[5] + 0.5) - pt.y);
     sizes.push_back(s);
-    std::cout << "sizing " << argv[j] << " at " << s.width << ", " << s.height << std::endl;
+    std::cout << "sizing " << argv[j] << " at " << s.width << ", " << s.height
+              << std::endl;
 
     j++;
   }
 
-  // from https://github.com/Itseez/opencv/blob/0726c4d4ea80e73c96ccee7bd3ef5f71f46ac82b/samples/cpp/stitching_detailed.cpp#L799
+  // from
+  // https://github.com/Itseez/opencv/blob/0726c4d4ea80e73c96ccee7bd3ef5f71f46ac82b/samples/cpp/stitching_detailed.cpp#L799
   dst_sz = cv::detail::resultRoi(corners, sizes).size();
   blend_width = sqrt(static_cast<float>(dst_sz.area())) * 5 / 100.f;
   std::cout << "Blending sharpness set to " << 1.f / blend_width << std::endl;
-  dynamic_cast<cv::detail::FeatherBlender *>(blender.get())->setSharpness(1.f / blend_width);
+  dynamic_cast<cv::detail::FeatherBlender *>(blender.get())
+      ->setSharpness(1.f / blend_width);
 
   blender->prepare(corners, sizes);
 
-  for(int i = 1; i < argc - 1; i++) {
+  for (int i = 1; i < argc - 1; i++) {
     cv::Mat im = cv::imread(argv[i]);
     resize(im, im, sizes.at(i - 1), cv::INTER_LANCZOS4);
     std::vector<cv::Mat> channels;
@@ -136,19 +144,17 @@ main(int argc, char **argv) {
   cv::imwrite(argv[argc - 1], result);
   std::cout << "done" << std::endl;
 
-  outds = (GDALDataset *) GDALOpen(argv[argc - 1], GA_Update);
+  outds = (GDALDataset *)GDALOpen(argv[argc - 1], GA_Update);
   check(outds != NULL, "Could not open %s\n", argv[argc - 1]);
 
   outds->SetGeoTransform(geotransform);
   outds->SetProjection(datasets.at(0)->GetProjectionRef());
 
   GDALClose(outds);
-  for(GDALDataset *ds : datasets)
-    GDALClose(ds);
+  for (GDALDataset *ds : datasets) GDALClose(ds);
   return 0;
 error:
-  if(outds) GDALClose(outds);
-  for(GDALDataset *ds : datasets)
-    GDALClose(ds);
+  if (outds) GDALClose(outds);
+  for (GDALDataset *ds : datasets) GDALClose(ds);
   return -1;
 }

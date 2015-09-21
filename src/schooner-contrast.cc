@@ -9,10 +9,8 @@
 #include <vector>
 #include "utils.h"
 
-
-int
-main(int argc, char** argv) {
-  if(argc != 3) {
+int main(int argc, char** argv) {
+  if (argc != 3) {
     std::cout << "usage: schooner-contrast src dst" << std::endl;
     exit(1);
   }

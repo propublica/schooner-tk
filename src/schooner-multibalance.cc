@@ -4,13 +4,12 @@
 #include <gdal.h>
 #include "utils.h"
 
-int
-main(int argc, char** argv) {
+int main(int argc, char** argv) {
   std::vector<cv::Mat> dst;
   std::vector<cv::Mat> images;
   check(argc > 1, "usage: schooner-multibalance <datasets>...");
 
-  for(int i = 1; i < argc; i++){
+  for (int i = 1; i < argc; i++) {
     cv::Mat rgb = get_image(argv[i]);
 
     images.push_back(rgb);
@@ -20,7 +19,7 @@ main(int argc, char** argv) {
 
   GDALAllRegister();
 
-  for(int i = 1; i < argc; i++) {
+  for (int i = 1; i < argc; i++) {
     std::string out(argv[i]);
     out.append(".balanced.tif");
     std::cout << "writing " << out << std::endl;

@@ -1,12 +1,12 @@
 #include "utils.h"
 
-int
-main(int argc, char **argv){
+int main(int argc, char **argv) {
   cv::Mat ir, vis, res;
   GDALDatasetH src, out;
-  check(argc == 3, "usage: schooner-ndvi <ir-band>.tif <red-band>.tif <ndvi>.tif");
+  check(argc == 3,
+        "usage: schooner-ndvi <ir-band>.tif <red-band>.tif <ndvi>.tif");
 
-  ir  = cv::imread(argv[1]);
+  ir = cv::imread(argv[1]);
   vis = cv::imread(argv[2]);
 
   res = (ir - vis) / (ir + vis + 0.00000001);
