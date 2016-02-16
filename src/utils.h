@@ -46,7 +46,7 @@ void balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
       d.second = fmax(
           d.second,
           sorted.at<uint16_t>(
-              0, (int)(white_index - black_index) * 99.0 / 100 + black_index));
+              0, (int)(white_index - black_index) * 99.5 / 100 + black_index));
       i++;
     }
   }
