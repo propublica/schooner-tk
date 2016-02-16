@@ -107,7 +107,7 @@ void process_datasets(GDALDatasetH out, GDALDatasetH *datasets, int num) {
                         ? std::abs(0.6745 * ((float)pixels[i] - (float)med) /
                                    (float)mad)
                         : 0;
-          if (m != 0 && m < 3.5) {
+          if (mad != 0 && m < 3.5) {
             tot += pixels[i];
           } else {
             real_size--;
