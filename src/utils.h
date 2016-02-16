@@ -33,15 +33,20 @@ void balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
              black_index < sorted.cols)
         black_index++;
 
+      int white_index = sorted.cols;
+      while (sorted.at<uint16_t>(0, white_index) == 65535 &&
+             white_index > 0)
+        white_index--;
+
       std::pair<double, double> &d = minmax.at(i);
       d.first = fmin(
           d.first,
           sorted.at<uint16_t>(
-              0, (int)(sorted.cols - black_index) * 0.1 / 100 + black_index));
+              0, (int)(white_index - black_index) * 0.1 / 100 + black_index));
       d.second = fmax(
           d.second,
           sorted.at<uint16_t>(
-              0, (int)(sorted.cols - black_index) * 99.0 / 100 + black_index));
+              0, (int)(white_index - black_index) * 99.0 / 100 + black_index));
       i++;
     }
   }
@@ -51,6 +56,7 @@ void balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
     cv::split(image, chans);
 
     for (int i = 0; i < chans.size(); i++) {
+      std::cout << minmax.at(i).first <<  "," << minmax.at(i).second << std::endl;
       std::pair<double, double> &d = minmax.at(i);
       chans[i] = (chans[i] - d.first) / (d.second - d.first) * 65535;
     }
