@@ -56,7 +56,6 @@ void balance(std::vector<cv::Mat> &images, std::vector<cv::Mat> &dst) {
     cv::split(image, chans);
 
     for (int i = 0; i < chans.size(); i++) {
-      std::cout << minmax.at(i).first <<  "," << minmax.at(i).second << std::endl;
       std::pair<double, double> &d = minmax.at(i);
       chans[i] = (chans[i] - d.first) / (d.second - d.first) * 65535;
     }
