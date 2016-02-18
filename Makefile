@@ -1,5 +1,16 @@
-CC = clang++
-CXX = clang++
+OS := $(shell uname -s)
+ifeq ($(OS),Linux)
+	CC = g++
+	CXX = g++
+	FLAGS = -std=c++11
+endif
+
+ifeq ($(OS),Darwin)
+	CC = clang++
+	CXX = clang++
+	FLAGS = -std=c++11 -stdlib=libc++
+endif
+
 RONN = $(wildcard man/*.ronn)
 HTML = $(RONN:.ronn=.html)
 
@@ -13,8 +24,7 @@ binaries: $(BINS)
 man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
 
-CXXFLAGS = $(shell gdal-config --cflags) -g -std=c++11 -stdlib=libc++ $(shell pkg-config --cflags opencv) -I./src/
-LDLIBS = $(shell gdal-config --libs) $(shell pkg-config --libs opencv) -std=c++11 -stdlib=libc++
+CXXFLAGS = -g $(FLAGS) -I./src/ $(shell gdal-config --cflags) $(shell gdal-config --libs) $(shell pkg-config --cflags --libs opencv)
 
 clean:
 	rm man/*.html man/*.1 $(BINS)
