@@ -25,7 +25,7 @@ man/%.html: man/%.ronn
 	ronn --manual=schooner-tk --organization=propublica $<
 
 CXXFLAGS = $(shell gdal-config --cflags) -g $(FLAGS) $(shell pkg-config --cflags opencv) -I./src/
-LDLIBS = $(shell gdal-config --libs) $(shell pkg-config --libs opencv) $(FLAGS)
+LDLIBS = $(shell gdal-config --libs) $(filter-out -lippicv, $(shell pkg-config --libs opencv)) $(FLAGS)
 
 clean:
 	rm man/*.html man/*.1 $(BINS)

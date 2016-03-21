@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
 
   // no need to check err, we did that when we built the bounds up
   datasets[0]->GetGeoTransform(geotransform);
-  xsize = (bounds.lr.first - bounds.ul.first) / geotransform[1] + 0.5;
-  ysize = (bounds.lr.second - bounds.ul.second) / geotransform[5] + 0.5;
+  xsize = (bounds.lr.first - bounds.ul.first) / geotransform[1];
+  ysize = (bounds.lr.second - bounds.ul.second) / geotransform[5];
   printf("Creating dataset %s with size %d x %d \n", argv[argc - 1], xsize,
          ysize);
   printf("and bounds UL: %f %f LR: %f %f\n", bounds.ul.first, bounds.ul.second,
@@ -110,8 +110,8 @@ int main(int argc, char **argv) {
               << std::endl;
 
     cv::Size s(
-        ((obounds.lr.first - geotransform[0]) / geotransform[1] + 0.5) - pt.x,
-        ((obounds.lr.second - geotransform[3]) / geotransform[5] + 0.5) - pt.y);
+        ((obounds.lr.first - geotransform[0]) / geotransform[1]) - pt.x,
+        ((obounds.lr.second - geotransform[3]) / geotransform[5]) - pt.y);
     sizes.push_back(s);
     std::cout << "sizing " << argv[j] << " at " << s.width << ", " << s.height
               << std::endl;
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
   // from
   // https://github.com/Itseez/opencv/blob/0726c4d4ea80e73c96ccee7bd3ef5f71f46ac82b/samples/cpp/stitching_detailed.cpp#L799
   dst_sz = cv::detail::resultRoi(corners, sizes).size();
-  blend_width = sqrt(static_cast<float>(dst_sz.area())) * 5 / 100.f;
+  blend_width = sqrt(static_cast<float>(dst_sz.area())) * 1 / 100.f;
   std::cout << "Blending sharpness set to " << 1.f / blend_width << std::endl;
   dynamic_cast<cv::detail::FeatherBlender *>(blender.get())
       ->setSharpness(1.f / blend_width);

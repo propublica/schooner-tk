@@ -15,7 +15,8 @@ The tool
 This tool relies on OpenCV 3.0 which is still in development, on OS X
 you can use homebrew to install it:
 
-	brew install opencv --devel --without-opencl
+  brew tap homebrew/science
+  brew install opencv3
 
 on linux, you'll probably need to install OpenCV from source.
 
