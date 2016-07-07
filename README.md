@@ -74,4 +74,4 @@ Learn more
 ----------
 
 For more detail, please see the [official documentation](https://propublica.github.io/schooner-tk/).
-For an example of a schooner-powered workflow, see [jqtr.de/schooner/](http://jqtr.de/schooner/).
+For an example of a schooner-powered workflow, see [jqtr.de/schooner/](http://jqtr.de/technical/2015/05/27/schooner.html).
